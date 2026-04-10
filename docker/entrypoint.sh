@@ -32,6 +32,17 @@ if [ ! -f "$HERMES_HOME/auth.json" ] && [ -n "$HERMES_AUTH_JSON" ]; then
     chmod 600 "$HERMES_HOME/auth.json"
 fi
 
+# Telegram credentials from env vars → .env
+if [ -n "$TELEGRAM_TOKEN" ]; then
+    sed -i "s|^# TELEGRAM_BOT_TOKEN=.*|TELEGRAM_BOT_TOKEN=$TELEGRAM_TOKEN|" "$HERMES_HOME/.env"
+fi
+if [ -n "$TELEGRAM_ALLOWED_USERS" ]; then
+    sed -i "s|^# TELEGRAM_ALLOWED_USERS=.*|TELEGRAM_ALLOWED_USERS=$TELEGRAM_ALLOWED_USERS|" "$HERMES_HOME/.env"
+fi
+if [ -n "$TELEGRAM_HOME_CHANNEL" ]; then
+    sed -i "s|^# TELEGRAM_HOME_CHANNEL=.*|TELEGRAM_HOME_CHANNEL=$TELEGRAM_HOME_CHANNEL|" "$HERMES_HOME/.env"
+fi
+
 # .hermes dir for config (some versions expect it here)
 mkdir -p "$HERMES_HOME/.hermes"
 if [ ! -f "$HERMES_HOME/.hermes/config.yaml" ] && [ -f "$HERMES_HOME/config.yaml" ]; then
