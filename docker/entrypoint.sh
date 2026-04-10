@@ -26,6 +26,18 @@ if [ ! -f "$HERMES_HOME/SOUL.md" ]; then
     cp "$INSTALL_DIR/docker/SOUL.md" "$HERMES_HOME/SOUL.md"
 fi
 
+# auth.json — restore from env var if not present in volume
+if [ ! -f "$HERMES_HOME/auth.json" ] && [ -n "$HERMES_AUTH_JSON" ]; then
+    echo "$HERMES_AUTH_JSON" > "$HERMES_HOME/auth.json"
+    chmod 600 "$HERMES_HOME/auth.json"
+fi
+
+# .hermes dir for config (some versions expect it here)
+mkdir -p "$HERMES_HOME/.hermes"
+if [ ! -f "$HERMES_HOME/.hermes/config.yaml" ] && [ -f "$HERMES_HOME/config.yaml" ]; then
+    cp "$HERMES_HOME/config.yaml" "$HERMES_HOME/.hermes/config.yaml"
+fi
+
 # Sync bundled skills (manifest-based so user edits are preserved)
 if [ -d "$INSTALL_DIR/skills" ]; then
     python3 "$INSTALL_DIR/tools/skills_sync.py"
